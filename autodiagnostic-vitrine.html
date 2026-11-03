@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Votre livre donne-t-il envie ? Autodiagnostic de vitrine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3EFE9; --sheet:#FBF9F6; --ink:#2B2622; --taupe:#7C7065; --line:#DDD5CA;
+  --brass:#9C7A34; --gain:#4F6B4A; --mid:#B08A3E; --loss:#9A4A3A; --eye:#5B6B7C;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.55;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:860px;margin:0 auto;padding:40px 24px 32px}
+h1{font-size:clamp(30px,4.6vw,44px);line-height:1.1;margin:0 0 14px}
+.lede{color:var(--taupe);font-size:18px;margin:0 0 10px}
+.how{font-size:15px;color:var(--taupe);margin:0 0 30px}
+nav.steps{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 26px;padding:0;list-style:none}
+nav.steps button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);padding:5px 11px;border-radius:20px;cursor:pointer}
+nav.steps button[aria-current="step"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+nav.steps button.done{border-color:var(--gain)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+section.part{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:24px 24px 10px}
+section.part h2{margin:0 0 4px;font-size:24px}
+.intro{color:var(--taupe);margin:0 0 18px;font-size:15.5px}
+fieldset.q{border:0;border-top:1px solid var(--line);margin:0;padding:14px 0}
+fieldset.q legend{padding:0;font-size:16.5px;font-weight:600;float:left;width:100%;margin-bottom:8px}
+.q .help{clear:both;font-size:14px;color:var(--taupe);margin:0 0 8px}
+.choices{clear:both;display:flex;flex-wrap:wrap;gap:8px}
+.choices label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:4px;padding:6px 11px;font-size:15px;cursor:pointer;background:#fff}
+.choices input{accent-color:var(--brass);margin:0}
+.choices label:has(input:checked){border-color:var(--ink);background:#F1ECE4}
+.tag{display:inline-block;font-size:12px;font-weight:600;color:var(--eye);border:1px solid var(--eye);border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0 0}
+.btn{font:inherit;font-size:16px;border-radius:4px;padding:9px 16px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn[hidden]{display:none}
+.progress{font-size:14px;color:var(--taupe);margin:10px 0 0}
+
+/* Résultats */
+#results h2{font-size:26px;margin:0 0 6px}
+.scores{display:grid;gap:10px;margin:18px 0 26px}
+.score{display:grid;grid-template-columns:190px 1fr 56px;gap:12px;align-items:center}
+@media (max-width:560px){.score{grid-template-columns:1fr 50px}.score .track{grid-column:1 / -1}}
+.track{height:12px;background:var(--line);border-radius:6px;overflow:hidden}
+.track span{display:block;height:100%}
+.pct{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.block{border-top:2px solid var(--ink);padding-top:14px;margin-top:26px}
+.block h3{margin:0 0 10px;font-size:20px}
+.item{padding:10px 0;border-bottom:1px solid var(--line)}
+.item b{display:block;font-size:16px}
+.item span{font-size:15px;color:var(--taupe)}
+.cta{background:var(--ink);color:#fff;border-radius:6px;padding:22px 24px;margin-top:30px}
+.cta h3{margin:0 0 8px;font-size:21px}
+.cta p{margin:0 0 12px;color:#E8E1D6}
+.cta a{display:inline-block;background:var(--brass);color:#fff;text-decoration:none;padding:9px 16px;border-radius:4px;font-weight:600}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--taupe)}
+footer a{color:var(--brass)}
+.copy{font-size:12.5px}
+@media print{nav.steps,.nav,.noprint{display:none!important}body{background:#fff}.cta{color:#000;background:#fff;border:1px solid #000}.cta p{color:#000}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Votre livre donne-t-il envie d'être acheté&nbsp;?</h1>
+  <p class="lede">Un lecteur décide en quelques secondes, sur une vignette en ligne ou devant une table de salon. Ce diagnostic passe en revue tout ce qu'il voit avant d'ouvrir votre livre.</p>
+  <p class="how">Sept étapes, une quarantaine de vérifications, environ vingt minutes. Ayez sous les yeux votre couverture, votre quatrième, la page de votre livre sur un site de vente et, si vous en avez un, votre site d'auteur. Répondez d'après ce que vous avez vérifié, pas d'après ce que vous pensez. Aucune donnée n'est enregistrée ni transmise.</p>
+</header>
+
+<nav class="steps noprint" aria-label="Étapes" id="steps"></nav>
+<main id="app"></main>
+
+<footer>
+  <p>Ce diagnostic vérifie ce qui peut l'être par vous-même. Il ne remplace pas la lecture de votre texte par un regard extérieur.</p>
+  <p class="copy">© 2026 Louis-Xavier Babin-Lachaud — <a href="https://www.ecrivain-service.fr/">ecrivain-service.fr</a>. Partage autorisé tel quel, modification et usage commercial interdits sans accord.</p>
+</footer>
+</div>
+
+<script>
+/* Lien vers la page de la prestation (à remplacer quand la page existera) */
+const LIEN_PRESTATION = "https://www.ecrivain-service.fr/audit-de-vitrine";
+
+/* type "eye" : question que l'auteur ne peut pas trancher seul */
+const PARTIES = [
+ { id:"couv", titre:"La couverture", intro:"Réduisez votre couverture à la taille d'une vignette, environ 2 cm de haut, comme dans les résultats de recherche d'une librairie en ligne.",
+   q:[
+    {t:"À cette taille, le titre se lit sans effort.", c:"Agrandissez le titre ou simplifiez sa police : en ligne, la plupart des lecteurs voient d'abord une vignette."},
+    {t:"Le titre contraste nettement avec le fond.", c:"Un titre clair sur fond clair, ou sombre sur fond sombre, disparaît en petit. Testez la couverture en noir et blanc."},
+    {t:"La couverture utilise deux polices au plus.", c:"Au-delà, l'œil ne sait plus où se poser. Gardez une police pour le titre, une autre pour le reste."},
+    {t:"L'image est nette, à l'écran comme à l'impression.", h:"Pour l'impression, au moins 300 dpi à la taille finale.", c:"Une image floue ou pixellisée signale un livre peu soigné. Remplacez-la ou faites-la retravailler."},
+    {t:"Elle ne reprend pas un modèle tout fait proposé par une plateforme.", c:"Les modèles des plateformes sont reconnaissables et associent votre livre à un travail d'amateur."},
+    {t:"Placée parmi les vingt meilleures ventes de votre genre, elle ne détonne pas.", h:"Faites le test : une capture des meilleures ventes, votre couverture glissée au milieu.", type:"eye", c:"Respecter les codes visuels d'un genre sans copier personne demande un regard extérieur."}
+   ]},
+ { id:"titre", titre:"Le titre", intro:"Le titre travaille avec la couverture : il doit être lu et compris d'un seul regard.",
+   q:[
+    {t:"Le titre et l'éventuel sous-titre se lisent d'un seul regard.", c:"Un titre long se lit mal en vignette. Si le sous-titre est indispensable, réduisez-le."},
+    {t:"Vous avez vérifié qu'aucun livre connu ne porte un titre identique ou très proche.", c:"Cherchez votre titre sur deux ou trois librairies en ligne avant d'aller plus loin."},
+    {t:"Le genre du livre se devine au titre, au sous-titre ou à la couverture.", c:"Un lecteur qui ne devine pas le genre passe au livre suivant. Le sous-titre peut l'annoncer."},
+    {t:"Le titre donne une idée juste du ton du livre.", type:"eye", c:"Un titre qui promet un autre ton que celui du texte déçoit, et les déçus laissent des avis."}
+   ]},
+ { id:"quat", titre:"La quatrième de couverture", intro:"C'est aussi, presque toujours, la description de votre livre sur les sites de vente.",
+   q:[
+    {t:"Elle a été relue par quelqu'un d'autre que vous, et ne contient aucune faute.", c:"Une faute dans la quatrième fait douter de tout le reste du livre. Faites-la relire par une personne attentive."},
+    {t:"Elle présente la situation et l'enjeu sans raconter la fin.", c:"La quatrième ouvre une question, elle ne résume pas l'intrigue jusqu'au bout."},
+    {t:"Elle tient en moins de 200 mots.", c:"Au-delà, elle se lit mal au dos d'un livre comme en ligne, où seules les premières lignes s'affichent."},
+    {t:"Vous l'avez écrite vous-même, ou entièrement réécrite si un outil l'a proposée.", c:"Les textes générés automatiquement se reconnaissent et se ressemblent tous. Le lecteur cherche une voix."},
+    {t:"Les premières lignes suffisent à donner envie de lire la suite.", type:"eye", c:"Sur la plupart des sites, seules deux ou trois lignes s'affichent avant le « Lire la suite »."},
+    {t:"Elle annonce bien ce que le lecteur trouvera dans les premières pages.", type:"eye", c:"Une promesse que le texte ne tient pas est la première cause d'abandon de lecture et d'avis négatifs."}
+   ]},
+ { id:"prix", titre:"Le prix", intro:"Le prix se compare : le lecteur le fait, faites-le avant lui.",
+   q:[
+    {t:"Vous avez comparé votre prix à celui d'au moins cinq livres du même genre, du même format et de longueur proche.", c:"Relevez le prix de cinq livres comparables, autoédités et édités, avant de fixer le vôtre."},
+    {t:"Votre prix est identique sur tous les sites et en salon.", c:"La loi impose un prix unique pour un livre neuf en France : vous le fixez, tous les vendeurs l'appliquent."},
+    {t:"Vous savez ce que vous rapporte un exemplaire sur chaque circuit de vente.", c:"Calculez votre gain sur Amazon, en librairie et en vente directe : un prix attractif qui ne rapporte rien n'est pas tenable."},
+    {t:"Le prix de l'ebook est nettement inférieur à celui du livre papier.", c:"Un ebook trop proche du prix papier se vend mal, et certaines plateformes réduisent alors votre part."}
+   ]},
+ { id:"fiche", titre:"La fiche en ligne", intro:"Ouvrez la page de votre livre sur Amazon, puis sur au moins un autre site de vente.",
+   q:[
+    {t:"Le livre est classé dans les catégories les plus proches de son genre réel.", c:"Une catégorie trop large noie le livre, une catégorie fausse attire des lecteurs qui seront déçus."},
+    {t:"Vous avez renseigné des mots-clés qui correspondent à ce que tape un lecteur de votre genre.", c:"Pensez aux mots du lecteur, pas aux vôtres : genre, époque, lieu, thème."},
+    {t:"Un extrait est disponible, et il commence vite par le texte.", h:"Remerciements, dédicaces ou pages blanches en tête d'extrait retardent la rencontre avec votre écriture.", c:"Allégez les pages qui précèdent le texte, ou placez-les en fin de livre."},
+    {t:"Titre, couverture, description et prix sont les mêmes sur tous les sites.", c:"Des informations différentes d'un site à l'autre sèment le doute. Harmonisez-les."},
+    {t:"Votre page auteur est remplie, avec une photo et une présentation.", c:"Sur Amazon, la page auteur se crée gratuitement. Une présentation de quelques lignes suffit."},
+    {t:"Votre livre apparaît quand on cherche son titre sur les principaux sites.", c:"S'il n'apparaît pas, vérifiez la diffusion choisie auprès de votre plateforme."}
+   ]},
+ { id:"site", titre:"Votre site d'auteur", so:true, intro:"Ouvrez votre site comme le ferait un lecteur qui vous découvre. Vous n'en avez pas&nbsp;? Choisissez «&nbsp;Je n'ai pas de site&nbsp;», cette étape ne comptera pas dans vos résultats.",
+   q:[
+    {t:"On trouve votre site en tapant votre nom d'auteur dans un moteur de recherche.", c:"C'est souvent ainsi qu'un lecteur arrive chez vous. Indiquez l'adresse de votre site partout où vous êtes présent, sur votre page auteur, vos réseaux et vos cartes de salon."},
+    {t:"Dès la page d'accueil, on comprend qui vous êtes et ce que vous écrivez.", c:"Le visiteur décide en quelques secondes. Votre nom, votre genre et votre dernier livre doivent se voir sans chercher."},
+    {t:"Chaque livre a sa page, avec sa couverture, sa présentation et son prix.", c:"Une simple liste de titres ne donne envie de rien. Reprenez au moins votre quatrième de couverture."},
+    {t:"Le visiteur sait où acheter chaque livre, en un clic.", c:"Placez sur chaque page de livre les liens vers les sites de vente, ou le moyen de vous l'acheter directement."},
+    {t:"Un extrait de chaque livre est disponible.", c:"Quelques pages suffisent. C'est la meilleure preuve de votre écriture, et la plus convaincante."},
+    {t:"Votre présentation parle de vous en tant qu'auteur et donne envie de vous lire.", type:"eye", c:"Une biographie qui énumère des dates n'attache pas. Le lecteur veut comprendre pourquoi vous écrivez ce que vous écrivez."},
+    {t:"Les informations sont à jour, du dernier livre aux prochaines dédicaces.", c:"Un site resté figé sur un livre d'il y a trois ans laisse croire que vous avez cessé d'écrire."},
+    {t:"Le visiteur peut vous écrire, ou demander à être prévenu de votre prochain livre.", c:"Un lecteur conquis qui ne peut pas vous suivre est un lecteur perdu. Un simple formulaire suffit pour commencer."},
+    {t:"Le site se lit sans difficulté sur un téléphone.", c:"Beaucoup de visites se font sur mobile. Vérifiez sur le vôtre que tout se lit sans zoomer et que les liens se touchent facilement."}
+   ]},
+ { id:"salon", titre:"En salon et en dédicace", intro:"Le livre physique a sa propre vitrine : votre table, et vous.",
+   q:[
+    {t:"Le prix est visible sur le livre et sur votre table.", c:"Un lecteur qui doit demander le prix hésite. Affichez-le clairement."},
+    {t:"Vous savez présenter votre livre en une phrase.", c:"Préparez une phrase qui dit le genre, le personnage et l'enjeu. Répétez-la jusqu'à ce qu'elle sonne naturellement."},
+    {t:"Un exemplaire est à la disposition des visiteurs pour être feuilleté.", c:"Un livre qu'on peut prendre en main se vend mieux qu'un livre sous film."},
+    {t:"Vous avez une fiche ou une carte à remettre à ceux qui ne l'achètent pas tout de suite.", c:"Titre, couverture, prix et où le trouver : beaucoup achètent plus tard."},
+    {t:"Vous acceptez au moins deux moyens de paiement.", c:"Espèces et carte au minimum : une vente perdue faute de moyen de paiement ne se rattrape pas."}
+   ]}
+];
+
+const VAL = { oui:1, partie:0.5, non:0, nsp:null, so:null };
+const answers = {};               // "couv-0" -> "oui" | "partie" | "non" | "nsp"
+let step = 0;
+const $ = s => document.querySelector(s);
+
+function renderSteps(){
+  const nav = $("#steps");
+  nav.innerHTML = PARTIES.map((p,i)=>{
+    const done = p.q.every((_,k)=>answers[p.id+"-"+k]);
+    return '<button type="button" data-i="'+i+'"'+(i===step?' aria-current="step"':'')+(done?' class="done"':'')+'>'+(i+1)+'. '+p.titre+'</button>';
+  }).join("") + '<button type="button" data-i="'+PARTIES.length+'"'+(step===PARTIES.length?' aria-current="step"':'')+'>Résultats</button>';
+  nav.querySelectorAll("button").forEach(b=>b.onclick=()=>{ step=+b.dataset.i; render(); });
+}
+
+function renderPart(){
+  const p = PARTIES[step];
+  let h = '<section class="part"><h2>'+(step+1)+'. '+p.titre+'</h2><p class="intro">'+p.intro+'</p>';
+  p.q.forEach((q,k)=>{
+    const id = p.id+"-"+k, name = "r_"+id.replace("-","_");
+    const opts = q.type==="eye"
+      ? [["oui","Oui"],["partie","En partie"],["non","Non"],["nsp","Je ne peux pas en juger seul"]]
+      : [["oui","Oui"],["partie","En partie"],["non","Non"]];
+    if(p.so) opts.push(["so","Je n'ai pas de site"]);
+    h += '<fieldset class="q"><legend>'+q.t+(q.type==="eye"?'<span class="tag">regard extérieur</span>':'')+'</legend>'+
+      (q.h?'<p class="help">'+q.h+'</p>':'')+'<div class="choices">'+
+      opts.map(o=>'<label><input type="radio" name="'+name+'" value="'+o[0]+'"'+(answers[id]===o[0]?' checked':'')+' data-id="'+id+'">'+o[1]+'</label>').join("")+
+      '</div></fieldset>';
+  });
+  const answered = p.q.filter((_,k)=>answers[p.id+"-"+k]).length;
+  h += '<p class="progress">'+answered+' réponse'+(answered>1?'s':'')+' sur '+p.q.length+'</p>';
+  h += '<div class="nav"><button class="btn ghost" type="button" id="prev"'+(step===0?' hidden':'')+'>Étape précédente</button>'+
+       '<button class="btn" type="button" id="next">'+(step===PARTIES.length-1?'Voir mes résultats':'Étape suivante')+'</button></div></section>';
+  $("#app").innerHTML = h;
+  $("#app").querySelectorAll("input[type=radio]").forEach(r=>r.onchange=()=>{ answers[r.dataset.id]=r.value; renderSteps(); $(".progress").textContent = p.q.filter((_,k)=>answers[p.id+"-"+k]).length+" réponse(s) sur "+p.q.length; });
+  const prev=$("#prev"); if(prev) prev.onclick=()=>{ step--; render(); };
+  $("#next").onclick=()=>{ step++; render(); window.scrollTo({top:0,behavior:"smooth"}); };
+}
+
+function couleur(p){ return p>=75?"var(--gain)":p>=50?"var(--mid)":"var(--loss)"; }
+
+function renderResults(){
+  let scores = "", aCorriger = [], aEnPartie = [], regard = [], manquantes = 0;
+  PARTIES.forEach(p=>{
+    let pts=0, n=0;
+    p.q.forEach((q,k)=>{
+      const a = answers[p.id+"-"+k];
+      if(!a){ manquantes++; return; }
+      if(a==="so") return;
+      if(a==="nsp"){ regard.push({p:p.titre,q}); return; }
+      pts += VAL[a]; n++;
+      if(q.type==="eye" && a!=="oui") regard.push({p:p.titre,q});
+      else if(a==="non") aCorriger.push({p:p.titre,q});
+      else if(a==="partie") aEnPartie.push({p:p.titre,q});
+    });
+    const pct = n ? Math.round(pts/n*100) : null;
+    scores += '<div class="score"><span>'+p.titre+'</span><div class="track" aria-hidden="true"><span style="width:'+(pct||0)+'%;background:'+couleur(pct||0)+'"></span></div><span class="pct">'+(pct===null?'–':pct+' %')+'</span></div>';
+  });
+  const liste = arr => arr.map(x=>'<div class="item"><b>'+x.q.t+'</b><span>'+x.p+' · '+x.q.c+'</span></div>').join("");
+  let h = '<section id="results"><h2>Vos résultats</h2>';
+  if(manquantes) h += '<p class="intro">'+manquantes+' vérification'+(manquantes>1?'s':'')+' sans réponse. Vous pouvez revenir aux étapes pour compléter.</p>';
+  h += '<div class="scores">'+scores+'</div>';
+  if(aCorriger.length) h += '<div class="block"><h3>À corriger en priorité</h3>'+liste(aCorriger)+'</div>';
+  if(aEnPartie.length) h += '<div class="block"><h3>À améliorer</h3>'+liste(aEnPartie)+'</div>';
+  if(!aCorriger.length && !aEnPartie.length && !manquantes) h += '<div class="block"><h3>Aucun point à corriger</h3><p class="intro">Tout ce qui peut se vérifier seul est en place.</p></div>';
+  if(regard.length) h += '<div class="block"><h3>Ce que vous ne pouvez pas trancher seul</h3><p class="intro">Ces points touchent au rapport entre votre vitrine et votre texte. Ils se jugent mieux avec un regard extérieur qui a lu les deux.</p>'+liste(regard)+'</div>';
+  h += '<div class="cta"><h3>Faire analyser votre vitrine</h3><p>L\'audit de vitrine confronte votre couverture, votre titre, votre quatrième, votre fiche de vente et, si vous en avez un, votre site d\'auteur aux premières pages de votre livre et aux livres qui se vendent dans votre genre. Sous cinq jours ouvrés, vous recevez un rapport écrit : les atouts de votre vitrine, les obstacles classés par importance avec leur correction, et l\'action à mener en premier. 195 €.</p><a href="'+LIEN_PRESTATION+'">Découvrir l\'audit de vitrine</a></div>';
+  h += '<div class="nav noprint"><button class="btn ghost" type="button" id="back">Revenir aux questions</button><button class="btn" type="button" id="print">Imprimer mes résultats</button></div></section>';
+  $("#app").innerHTML = h;
+  $("#back").onclick=()=>{ step=0; render(); };
+  $("#print").onclick=()=>window.print();
+}
+
+function render(){ renderSteps(); step < PARTIES.length ? renderPart() : renderResults(); }
+render();
+</script>
+</body>
+</html>
